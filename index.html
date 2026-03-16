@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BitByBit Coding Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --card: #111827;
+    --card2: #1a2236;
+    --accent: #00e5c8;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --border: rgba(0,229,200,0.15);
+    --danger: #ef4444;
+    --success: #22c55e;
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,200,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,200,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%);
+    top: -200px; right: -200px;
+    z-index: 0;
+    pointer-events: none;
+    animation: pulse 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.2); } }
+
+  .blob2 {
+    position: fixed;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,229,200,0.12) 0%, transparent 70%);
+    bottom: -150px; left: -150px;
+    z-index: 0;
+    pointer-events: none;
+    animation: pulse 10s ease-in-out infinite alternate-reverse;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 16px 80px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+    animation: fadeDown 0.7s ease both;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,229,200,0.1);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+
+  .badge-dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: blink 1.5s ease-in-out infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #fff 30%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    animation: fadeDown 0.8s ease both;
+    animation-delay: 0.1s;
+  }
+
+  .progress-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    width: 0%;
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  }
+
+  .progress-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* Timer */
+  .timer-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--accent3);
+  }
+
+  #timer { font-weight: 700; font-size: 15px; }
+  #timer.danger { color: var(--danger); animation: blink 0.8s infinite; }
+
+  /* Question card */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 16px;
+    transition: border-color 0.3s;
+    animation: slideUp 0.5s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .q-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .q-card.answered::before { opacity: 1; }
+  .q-card.answered { border-color: rgba(0,229,200,0.3); }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-num {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,229,200,0.1);
+    border-radius: 6px;
+    padding: 3px 10px;
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  .q-text {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  /* Radio options */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--card2);
+    border: 1.5px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+    user-select: none;
+  }
+
+  .option-label:hover {
+    border-color: var(--accent);
+    background: rgba(0,229,200,0.06);
+    transform: translateX(4px);
+  }
+
+  .option-label input[type="radio"] { display: none; }
+
+  .radio-custom {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .option-label input:checked ~ .radio-custom {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .option-label input:checked ~ .radio-custom::after {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--bg);
+  }
+
+  .option-label:has(input:checked) {
+    border-color: var(--accent);
+    background: rgba(0,229,200,0.08);
+  }
+
+  /* Submit button */
+  .submit-wrap {
+    text-align: center;
+    margin-top: 32px;
+    animation: fadeDown 0.6s ease both;
+    animation-delay: 0.3s;
+  }
+
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 48px;
+    background: linear-gradient(135deg, var(--accent), #00b8a0);
+    color: #0b0f1a;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.02em;
+    box-shadow: 0 0 30px rgba(0,229,200,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-submit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(0,229,200,0.5); }
+  .btn-submit:hover::before { opacity: 0.1; }
+  .btn-submit:active { transform: translateY(0); }
+
+  /* Result screen */
+  .result-screen {
+    display: none;
+    text-align: center;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .result-icon {
+    font-size: 72px;
+    margin-bottom: 16px;
+    animation: bounceIn 0.7s cubic-bezier(.36,.07,.19,.97) both;
+  }
+
+  @keyframes bounceIn {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .result-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .result-title.pass { color: var(--success); }
+  .result-title.fail { color: var(--danger); }
+
+  .score-display {
+    font-family: 'Space Mono', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    margin: 24px 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .score-bar {
+    width: 100%; max-width: 360px;
+    margin: 0 auto 24px;
+    height: 12px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .score-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 1.2s cubic-bezier(.4,0,.2,1);
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .result-msg {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  .btn-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 36px;
+    background: #25D366;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.25s;
+    box-shadow: 0 0 30px rgba(37,211,102,0.35);
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(37,211,102,0.5); }
+
+  .answer-review {
+    margin-top: 32px;
+    text-align: left;
+  }
+
+  .review-title {
+    font-size: 14px;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    margin-bottom: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  .review-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .review-item.correct { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); }
+  .review-item.wrong { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); }
+  .review-dot { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Blocked screen */
+  .blocked-screen {
+    display: none;
+    text-align: center;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .blocked-icon { font-size: 80px; margin-bottom: 16px; }
+
+  .countdown-box {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 320px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .countdown-label { font-size: 12px; color: var(--muted); letter-spacing: 0.1em; }
+  #countdown { font-size: 28px; font-weight: 700; color: var(--danger); margin-top: 6px; }
+
+  /* Loading */
+  .loading { display: none; text-align: center; padding: 60px 0; }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid rgba(0,229,200,0.15);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Utility */
+  .hidden { display: none !important; }
+  .card-container { position: relative; }
+
+  .anti-cheat-warning {
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--accent3);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: fadeDown 0.7s ease both;
+    animation-delay: 0.15s;
+  }
+
+  @media (max-width: 600px) {
+    .wrapper { padding: 24px 12px 60px; }
+    h1 { font-size: 1.7rem; }
+    .q-card { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="blob2"></div>
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge"><span class="badge-dot"></span> LIVE TEST</div>
+    <h1>BitByBit Coding Test</h1>
+    <p class="subtitle">Answer all 10 questions correctly to join the community</p>
+  </div>
+
+  <!-- Blocked Screen -->
+  <div class="blocked-screen" id="blockedScreen">
+    <div class="blocked-icon">🔒</div>
+    <div class="result-title fail" style="font-size:1.6rem;">Access Blocked</div>
+    <p class="result-msg" style="margin-top:12px;">You have already attempted this test.<br>Come back after the cooldown period.</p>
+    <div class="countdown-box">
+      <div class="countdown-label">RETAKE AVAILABLE IN</div>
+      <div id="countdown">--:--:--</div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);">⚠️ Clearing browser storage will not reset the lock as your attempt is recorded.</p>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen">
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">0 / 10</div>
+      <div class="timer-wrap">
+        <span>⏱</span>
+        <span id="timer">20:00</span>
+      </div>
+    </div>
+
+    <div class="anti-cheat-warning">
+      ⚠️ <span>One attempt only. Tab switching is monitored. Results are final.</span>
+    </div>
+
+    <!-- Questions -->
+    <div id="questionsContainer" class="card-container"></div>
+
+    <div class="submit-wrap">
+      <button class="btn-submit" onclick="submitTest()">
+        <span>Submit Test</span>
+        <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="result-screen" id="resultScreen">
+    <div class="result-icon" id="resultIcon"></div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="score-display" id="scoreDisplay"></div>
+    <div class="score-bar">
+      <div class="score-fill" id="scoreFill"></div>
+    </div>
+    <p class="result-msg" id="resultMsg"></p>
+    <div id="resultAction"></div>
+    <div class="answer-review" id="answerReview"></div>
+  </div>
+
+</div>
+
+<script>
+// ==================== QUESTIONS ====================
+const questions = [
+  {
+    q: "What is the time complexity of binary search on a sorted array of n elements?",
+    options: ["O(n)", "O(n²)", "O(log n)", "O(n log n)"],
+    ans: 2
+  },
+  {
+    q: "Which HTTP status code indicates a resource was successfully created?",
+    options: ["200 OK", "201 Created", "204 No Content", "301 Moved Permanently"],
+    ans: 1
+  },
+  {
+    q: "In JavaScript, what does `typeof null` return?",
+    options: ['"null"', '"undefined"', '"object"', '"boolean"'],
+    ans: 2
+  },
+  {
+    q: "Which SQL clause is used to filter groups after a GROUP BY aggregation?",
+    options: ["WHERE", "FILTER", "HAVING", "SELECT"],
+    ans: 2
+  },
+  {
+    q: "What design pattern does React's Context API primarily implement?",
+    options: ["Observer", "Singleton", "Dependency Injection", "Decorator"],
+    ans: 2
+  },
+  {
+    q: "In Python, what is the output of: `print(0.1 + 0.2 == 0.3)`?",
+    options: ["True", "False", "None", "TypeError"],
+    ans: 1
+  },
+  {
+    q: "What does the CSS property `box-sizing: border-box` do?",
+    options: [
+      "Adds a border around the box model",
+      "Includes padding and border within the element's declared width/height",
+      "Removes the default margin from elements",
+      "Makes the element's border a dashed line"
+    ],
+    ans: 1
+  },
+  {
+    q: "Which data structure uses LIFO (Last In, First Out) order?",
+    options: ["Queue", "Linked List", "Stack", "Heap"],
+    ans: 2
+  },
+  {
+    q: "In Git, what does `git rebase` do compared to `git merge`?",
+    options: [
+      "Deletes the source branch after combining",
+      "Rewrites commit history by placing commits on top of another branch",
+      "Creates a new branch from the current state",
+      "Reverts the last commit on the current branch"
+    ],
+    ans: 1
+  },
+  {
+    q: "What is a closure in JavaScript?",
+    options: [
+      "A function that has no return value",
+      "A way to close/terminate a running script",
+      "A function that retains access to its outer scope even after the outer function returns",
+      "A method to block access to a variable"
+    ],
+    ans: 2
+  }
+];
+
+// ==================== ANTI-CHEAT CONFIG ====================
+const COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 hours
+const STORAGE_KEY = "bbb_attempt_v3";
+const TIMER_SECS = 20 * 60; // 20 minutes
+
+let timerInterval = null;
+let secondsLeft = TIMER_SECS;
+let tabSwitchCount = 0;
+
+// ==================== INIT ====================
+window.onload = function () {
+  const attempt = getAttemptData();
+  if (attempt && attempt.timestamp) {
+    const elapsed = Date.now() - attempt.timestamp;
+    if (elapsed < COOLDOWN_MS) {
+      showBlockedScreen(attempt.timestamp);
+      return;
+    }
+  }
+  buildQuiz();
+  startTimer();
+  watchTabSwitch();
+};
+
+function getAttemptData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
+}
+
+function saveAttempt(score) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ timestamp: Date.now(), score }));
+  // Also set a cookie as secondary block
+  document.cookie = `${STORAGE_KEY}=1; max-age=${COOLDOWN_MS / 1000}; path=/`;
+}
+
+// ==================== BUILD QUIZ ====================
+function buildQuiz() {
+  const container = document.getElementById("questionsContainer");
+  questions.forEach((item, i) => {
+    const card = document.createElement("div");
+    card.className = "q-card";
+    card.id = `card_${i}`;
+    card.style.animationDelay = `${i * 0.06}s`;
+
+    let optionsHTML = item.options.map((opt, oi) => `
+      <label class="option-label" onclick="markAnswered(${i})">
+        <input type="radio" name="q${i}" value="${oi}">
+        <span class="radio-custom"></span>
+        <span>${opt}</span>
+      </label>
+    `).join('');
+
+    card.innerHTML = `
+      <span class="q-num">QUESTION ${String(i + 1).padStart(2, '0')} / 10</span>
+      <p class="q-text">${item.q}</p>
+      <div class="options">${optionsHTML}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function markAnswered(qIndex) {
+  const card = document.getElementById(`card_${qIndex}`);
+  card.classList.add("answered");
+  updateProgress();
+}
+
+function updateProgress() {
+  let answered = 0;
+  questions.forEach((_, i) => {
+    const radios = document.querySelectorAll(`input[name="q${i}"]`);
+    if ([...radios].some(r => r.checked)) answered++;
+  });
+  const pct = (answered / questions.length) * 100;
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressLabel").textContent = `${answered} / ${questions.length}`;
+}
+
+// ==================== TIMER ====================
+function startTimer() {
+  timerInterval = setInterval(() => {
+    secondsLeft--;
+    const m = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
+    const s = String(secondsLeft % 60).padStart(2, '0');
+    const el = document.getElementById("timer");
+    el.textContent = `${m}:${s}`;
+    if (secondsLeft <= 60) el.classList.add("danger");
+    if (secondsLeft <= 0) { clearInterval(timerInterval); autoSubmit(); }
+  }, 1000);
+}
+
+function autoSubmit() {
+  alert("⏰ Time's up! Auto-submitting your test.");
+  submitTest();
+}
+
+// ==================== TAB SWITCH MONITOR ====================
+function watchTabSwitch() {
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      tabSwitchCount++;
+      if (tabSwitchCount >= 3) {
+        clearInterval(timerInterval);
+        saveAttempt(-1);
+        alert("⚠️ You switched tabs too many times. Your attempt has been voided.");
+        document.getElementById("quizScreen").innerHTML =
+          `<div style="text-align:center;padding:60px 0;">
+            <div style="font-size:64px;">🚫</div>
+            <p style="color:var(--danger);font-size:1.2rem;font-weight:700;margin-top:16px;">Attempt Voided</p>
+            <p style="color:var(--muted);margin-top:8px;">Too many tab switches detected.</p>
+          </div>`;
+      }
+    }
+  });
+}
+
+// ==================== SUBMIT ====================
+function submitTest() {
+  // Check all answered
+  let allAnswered = true;
+  questions.forEach((_, i) => {
+    const radios = document.querySelectorAll(`input[name="q${i}"]`);
+    if (![...radios].some(r => r.checked)) allAnswered = false;
+  });
+  if (!allAnswered) {
+    alert("⚠️ Please answer all 10 questions before submitting.");
+    return;
+  }
+
+  clearInterval(timerInterval);
+
+  let score = 0;
+  const results = [];
+  questions.forEach((q, i) => {
+    const radios = document.querySelectorAll(`input[name="q${i}"]`);
+    let chosen = -1;
+    radios.forEach(r => { if (r.checked) chosen = parseInt(r.value); });
+    const correct = chosen === q.ans;
+    if (correct) score++;
+    results.push({ q: q.q, chosen, correct, correctAns: q.options[q.ans] });
+  });
+
+  saveAttempt(score);
+  showResult(score, results);
+}
+
+// ==================== RESULT ====================
+function showResult(score, results) {
+  document.getElementById("quizScreen").style.display = "none";
+  const rs = document.getElementById("resultScreen");
+  rs.style.display = "block";
+
+  const passed = score >= 7;
+  const pct = (score / questions.length) * 100;
+
+  document.getElementById("resultIcon").textContent = passed ? "🎉" : "😔";
+  document.getElementById("resultTitle").textContent = passed ? "You Passed!" : "Not Quite There";
+  document.getElementById("resultTitle").className = `result-title ${passed ? 'pass' : 'fail'}`;
+  document.getElementById("scoreDisplay").textContent = `${score} / 10`;
+
+  setTimeout(() => {
+    document.getElementById("scoreFill").style.width = pct + "%";
+  }, 300);
+
+  if (passed) {
+    document.getElementById("resultMsg").innerHTML =
+      `<strong style="color:var(--success)">Congratulations!</strong> You scored ${score}/10 and passed.<br>
+      Click below to join the BitByBit WhatsApp group.`;
+    document.getElementById("resultAction").innerHTML = `
+      <button class="btn-whatsapp" onclick="openWhatsApp()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Join WhatsApp Group
+      </button>`;
+  } else {
+    document.getElementById("resultMsg").innerHTML =
+      `You scored <strong>${score}/10</strong>. You need at least <strong>7/10</strong> to pass.<br>
+      Study harder and try again after 24 hours.`;
+    document.getElementById("resultAction").innerHTML = `
+      <p style="color:var(--muted);font-size:13px;margin-top:8px;">🔒 Retake available in 24 hours</p>`;
+  }
+
+  // Answer review
+  let reviewHTML = `<p class="review-title">// ANSWER REVIEW</p>`;
+  results.forEach((r, i) => {
+    reviewHTML += `
+      <div class="review-item ${r.correct ? 'correct' : 'wrong'}">
+        <span class="review-dot">${r.correct ? '✅' : '❌'}</span>
+        <div>
+          <strong>Q${i+1}:</strong> ${r.q}<br>
+          ${!r.correct ? `<span style="color:var(--muted);font-size:12px;">Correct: ${r.correctAns}</span>` : ''}
+        </div>
+      </div>`;
+  });
+  document.getElementById("answerReview").innerHTML = reviewHTML;
+}
+
+// ==================== WHATSAPP DEEP LINK ====================
+function openWhatsApp() {
+  const groupLink = "https://chat.whatsapp.com/BO4Nq6gAoKS5JT8XIYfDta?mode=gi_t";
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  const isAndroid = /android/i.test(ua);
+  const isIOS = /iphone|ipad|ipod/i.test(ua);
+
+  if (isAndroid || isIOS) {
+    // Try to open native WhatsApp app
+    const code = groupLink.replace("https://chat.whatsapp.com/", "");
+    const appLink = `whatsapp://g/${code}`;
+    const fallback = groupLink;
+    const start = Date.now();
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = appLink;
+    document.body.appendChild(iframe);
+    setTimeout(() => {
+      document.body.removeChild(iframe);
+      if (Date.now() - start < 2000) {
+        window.open(fallback, "_blank");
+      }
+    }, 1500);
+    window.location.href = appLink;
+    setTimeout(() => { window.open(fallback, "_blank"); }, 2000);
+  } else {
+    window.open(groupLink, "_blank");
+  }
+}
+
+// ==================== BLOCKED SCREEN ====================
+function showBlockedScreen(timestamp) {
+  document.getElementById("quizScreen").style.display = "none";
+  document.getElementById("blockedScreen").style.display = "block";
+  runCountdown(timestamp);
+}
+
+function runCountdown(timestamp) {
+  function tick() {
+    const remaining = COOLDOWN_MS - (Date.now() - timestamp);
+    if (remaining <= 0) {
+      document.getElementById("countdown").textContent = "00:00:00";
+      document.getElementById("blockedScreen").innerHTML +=
+        `<p style="color:var(--success);margin-top:16px;font-weight:700;">✅ Cooldown over! Refresh to retake.</p>`;
+      return;
+    }
+    const h = String(Math.floor(remaining / 3600000)).padStart(2, '0');
+    const m = String(Math.floor((remaining % 3600000) / 60000)).padStart(2, '0');
+    const s = String(Math.floor((remaining % 60000) / 1000)).padStart(2, '0');
+    document.getElementById("countdown").textContent = `${h}:${m}:${s}`;
+    setTimeout(tick, 1000);
+  }
+  tick();
+}
+</script>
+</body>
+</html>
