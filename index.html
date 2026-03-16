@@ -7,15 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0b0f1a;
-    --card: #111827;
-    --card2: #1a2236;
+    --bg: #080c16;
+    --card: #0f1624;
+    --card2: #151e2e;
     --accent: #00e5c8;
-    --accent2: #7c3aed;
+    --accent2: #6d28d9;
     --accent3: #f59e0b;
-    --text: #f1f5f9;
-    --muted: #94a3b8;
-    --border: rgba(0,229,200,0.15);
+    --text: #f0f6ff;
+    --muted: #8899b4;
+    --border: rgba(0,229,200,0.12);
     --danger: #ef4444;
     --success: #22c55e;
     --radius: 16px;
@@ -23,692 +23,633 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html { scroll-behavior: smooth; }
+
   body {
     font-family: 'Syne', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
-    position: relative;
   }
 
-  /* Animated background grid */
+  /* Animated background */
   body::before {
     content: '';
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background-image:
-      linear-gradient(rgba(0,229,200,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,200,0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    z-index: 0;
-    pointer-events: none;
+      linear-gradient(rgba(0,229,200,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,200,0.035) 1px, transparent 1px);
+    background-size: 44px 44px;
+    z-index: 0; pointer-events: none;
   }
 
-  body::after {
-    content: '';
-    position: fixed;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%);
+  .blob {
+    position: fixed; border-radius: 50%; z-index: 0; pointer-events: none;
+    filter: blur(80px);
+  }
+  .blob1 {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(109,40,217,0.2) 0%, transparent 70%);
     top: -200px; right: -200px;
-    z-index: 0;
-    pointer-events: none;
-    animation: pulse 8s ease-in-out infinite alternate;
+    animation: drift 12s ease-in-out infinite alternate;
   }
-
-  @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.2); } }
-
   .blob2 {
-    position: fixed;
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(0,229,200,0.12) 0%, transparent 70%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,229,200,0.13) 0%, transparent 70%);
     bottom: -150px; left: -150px;
-    z-index: 0;
-    pointer-events: none;
-    animation: pulse 10s ease-in-out infinite alternate-reverse;
+    animation: drift 9s ease-in-out infinite alternate-reverse;
   }
+
+  @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,30px) scale(1.12); } }
 
   .wrapper {
-    position: relative;
-    z-index: 1;
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 40px 16px 80px;
+    position: relative; z-index: 1;
+    max-width: 740px; margin: 0 auto;
+    padding: 48px 18px 100px;
   }
 
-  /* Header */
-  .header {
-    text-align: center;
-    margin-bottom: 36px;
-    animation: fadeDown 0.7s ease both;
-  }
+  /* ── HEADER ── */
+  .header { text-align: center; margin-bottom: 40px; animation: fadeDown 0.7s ease both; }
 
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
 
   .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(0,229,200,0.1);
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(0,229,200,0.08);
     border: 1px solid var(--border);
-    border-radius: 999px;
-    padding: 6px 16px;
-    font-size: 12px;
-    color: var(--accent);
+    border-radius: 999px; padding: 6px 18px;
+    font-size: 11px; color: var(--accent);
     font-family: 'Space Mono', monospace;
-    letter-spacing: 0.08em;
-    margin-bottom: 16px;
+    letter-spacing: 0.12em; margin-bottom: 18px;
   }
 
   .badge-dot {
-    width: 7px; height: 7px;
-    background: var(--accent);
-    border-radius: 50%;
-    animation: blink 1.5s ease-in-out infinite;
+    width: 7px; height: 7px; background: var(--accent);
+    border-radius: 50%; animation: blink 1.6s ease-in-out infinite;
   }
 
-  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.15;} }
 
   h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    background: linear-gradient(135deg, #fff 30%, var(--accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: clamp(2.1rem, 5vw, 3.2rem);
+    font-weight: 800; line-height: 1.1; letter-spacing: -0.03em;
+    background: linear-gradient(130deg, #ffffff 20%, var(--accent) 80%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
 
   .subtitle {
-    color: var(--muted);
-    margin-top: 10px;
-    font-size: 15px;
-    font-weight: 400;
+    color: var(--muted); margin-top: 10px; font-size: 15px; font-weight: 400;
   }
 
-  /* Progress bar */
+  /* ── INFO BAR ── */
+  .info-bar {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 24px;
+    animation: fadeDown 0.75s ease both; animation-delay: 0.1s;
+  }
+
+  .info-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 16px;
+    font-size: 13px; color: var(--muted);
+    flex: 1; min-width: 150px;
+  }
+
+  .info-pill strong { color: var(--text); }
+  .info-pill span.icon { font-size: 16px; }
+
+  /* ── PROGRESS ── */
   .progress-wrap {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    animation: fadeDown 0.8s ease both;
-    animation-delay: 0.1s;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 16px;
+    animation: fadeDown 0.8s ease both; animation-delay: 0.15s;
   }
 
   .progress-bar-bg {
-    flex: 1;
-    height: 6px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 99px;
-    overflow: hidden;
+    flex: 1; height: 7px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 99px; overflow: hidden;
   }
 
   .progress-bar-fill {
     height: 100%;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 99px;
-    width: 0%;
-    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+    border-radius: 99px; width: 0%;
+    transition: width 0.45s cubic-bezier(.4,0,.2,1);
   }
 
   .progress-label {
     font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    color: var(--accent);
-    white-space: nowrap;
+    font-size: 13px; color: var(--accent); white-space: nowrap;
   }
 
-  /* Timer */
   .timer-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    color: var(--accent3);
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Space Mono', monospace; font-size: 13px; color: var(--accent3);
   }
 
   #timer { font-weight: 700; font-size: 15px; }
-  #timer.danger { color: var(--danger); animation: blink 0.8s infinite; }
+  #timer.danger { color: var(--danger); animation: blink 0.7s infinite; }
 
-  /* Question card */
-  .q-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 28px;
-    margin-bottom: 16px;
-    transition: border-color 0.3s;
-    animation: slideUp 0.5s ease both;
-    position: relative;
-    overflow: hidden;
+  /* ── WARNING BAR ── */
+  .warn-bar {
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 10px; padding: 11px 16px;
+    font-size: 13px; color: var(--accent3);
+    margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
+    animation: fadeDown 0.8s ease both; animation-delay: 0.2s;
   }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px 28px 24px;
+    margin-bottom: 16px; position: relative; overflow: hidden;
+    animation: slideUp 0.5s ease both;
+    transition: border-color 0.3s;
+  }
+
+  @keyframes slideUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
 
   .q-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
-    opacity: 0;
-    transition: opacity 0.3s;
+    opacity: 0; transition: opacity 0.3s;
   }
 
+  .q-card.answered { border-color: rgba(0,229,200,0.28); }
   .q-card.answered::before { opacity: 1; }
-  .q-card.answered { border-color: rgba(0,229,200,0.3); }
-
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
 
   .q-num {
     display: inline-block;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
-    background: rgba(0,229,200,0.1);
-    border-radius: 6px;
-    padding: 3px 10px;
-    margin-bottom: 12px;
-    letter-spacing: 0.1em;
+    font-family: 'Space Mono', monospace; font-size: 10px; color: var(--accent);
+    background: rgba(0,229,200,0.09); border-radius: 6px;
+    padding: 3px 11px; margin-bottom: 12px; letter-spacing: 0.12em;
   }
 
   .q-text {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.55;
-    color: var(--text);
-    margin-bottom: 20px;
+    font-size: 15.5px; font-weight: 600; line-height: 1.6; color: var(--text);
+    margin-bottom: 20px; white-space: pre-line;
   }
 
-  /* Radio options */
+  .q-text code {
+    font-family: 'Space Mono', monospace; font-size: 13px;
+    background: rgba(0,229,200,0.08); border-radius: 5px;
+    padding: 2px 8px; color: var(--accent);
+  }
+
+  /* ── OPTIONS ── */
   .options { display: flex; flex-direction: column; gap: 10px; }
 
   .option-label {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 18px;
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 18px;
     background: var(--card2);
-    border: 1.5px solid rgba(255,255,255,0.07);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 14px;
-    font-weight: 500;
-    user-select: none;
+    border: 1.5px solid rgba(255,255,255,0.06);
+    border-radius: 10px; cursor: pointer;
+    transition: all 0.2s; font-size: 14px; font-weight: 500;
+    user-select: none; line-height: 1.5;
   }
 
   .option-label:hover {
     border-color: var(--accent);
-    background: rgba(0,229,200,0.06);
+    background: rgba(0,229,200,0.05);
     transform: translateX(4px);
   }
 
   .option-label input[type="radio"] { display: none; }
 
   .radio-custom {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.2);
-    flex-shrink: 0;
+    width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+    border: 2px solid rgba(255,255,255,0.18);
     display: flex; align-items: center; justify-content: center;
     transition: all 0.2s;
   }
 
-  .option-label input:checked ~ .radio-custom {
-    border-color: var(--accent);
-    background: var(--accent);
+  .option-label:has(input:checked) .radio-custom {
+    border-color: var(--accent); background: var(--accent);
   }
 
-  .option-label input:checked ~ .radio-custom::after {
-    content: '';
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--bg);
+  .option-label:has(input:checked) .radio-custom::after {
+    content: ''; width: 7px; height: 7px;
+    border-radius: 50%; background: var(--bg);
   }
 
   .option-label:has(input:checked) {
     border-color: var(--accent);
-    background: rgba(0,229,200,0.08);
+    background: rgba(0,229,200,0.07);
   }
 
-  /* Submit button */
+  /* ── SUBMIT ── */
   .submit-wrap {
-    text-align: center;
-    margin-top: 32px;
-    animation: fadeDown 0.6s ease both;
-    animation-delay: 0.3s;
+    text-align: center; margin-top: 36px;
+    animation: fadeDown 0.7s ease both; animation-delay: 0.3s;
   }
 
   .btn-submit {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 48px;
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 17px 52px;
     background: linear-gradient(135deg, var(--accent), #00b8a0);
-    color: #0b0f1a;
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.25s;
-    letter-spacing: 0.02em;
-    box-shadow: 0 0 30px rgba(0,229,200,0.3);
-    position: relative;
-    overflow: hidden;
+    color: #080c16; font-family: 'Syne', sans-serif;
+    font-size: 16px; font-weight: 800;
+    border: none; border-radius: 13px; cursor: pointer;
+    transition: all 0.25s; letter-spacing: 0.02em;
+    box-shadow: 0 0 40px rgba(0,229,200,0.28);
+    position: relative; overflow: hidden;
   }
 
-  .btn-submit::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: white;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(0,229,200,0.5); }
-  .btn-submit:hover::before { opacity: 0.1; }
+  .btn-submit:hover { transform: translateY(-3px); box-shadow: 0 10px 48px rgba(0,229,200,0.45); }
   .btn-submit:active { transform: translateY(0); }
 
-  /* Result screen */
-  .result-screen {
-    display: none;
-    text-align: center;
-    animation: fadeDown 0.6s ease both;
-  }
+  /* ── RESULT SCREEN ── */
+  .result-screen { display: none; text-align: center; animation: fadeDown 0.6s ease both; }
 
-  .result-icon {
-    font-size: 72px;
-    margin-bottom: 16px;
-    animation: bounceIn 0.7s cubic-bezier(.36,.07,.19,.97) both;
-  }
+  .result-icon { font-size: 80px; margin-bottom: 12px; animation: bounceIn 0.7s cubic-bezier(.36,.07,.19,.97) both; }
 
-  @keyframes bounceIn {
-    0% { transform: scale(0); opacity: 0; }
-    60% { transform: scale(1.2); }
-    100% { transform: scale(1); opacity: 1; }
-  }
+  @keyframes bounceIn { 0%{transform:scale(0);opacity:0;} 60%{transform:scale(1.2);} 100%{transform:scale(1);opacity:1;} }
 
-  .result-title {
-    font-size: 2rem;
-    font-weight: 800;
-    margin-bottom: 8px;
-  }
-
+  .result-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.02em; }
   .result-title.pass { color: var(--success); }
   .result-title.fail { color: var(--danger); }
 
-  .score-display {
-    font-family: 'Space Mono', monospace;
-    font-size: 48px;
-    font-weight: 700;
-    margin: 24px 0;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .score-ring-wrap { margin: 28px auto; width: 140px; height: 140px; position: relative; }
+
+  .score-ring-wrap svg { transform: rotate(-90deg); }
+
+  .score-ring-bg { fill: none; stroke: rgba(255,255,255,0.07); stroke-width: 10; }
+  .score-ring-fill {
+    fill: none; stroke-width: 10; stroke-linecap: round;
+    stroke-dasharray: 376; stroke-dashoffset: 376;
+    transition: stroke-dashoffset 1.3s cubic-bezier(.4,0,.2,1);
+  }
+  .score-ring-fill.pass-ring { stroke: var(--success); }
+  .score-ring-fill.fail-ring { stroke: var(--danger); }
+
+  .score-ring-label {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
   }
 
-  .score-bar {
-    width: 100%; max-width: 360px;
-    margin: 0 auto 24px;
-    height: 12px;
-    background: rgba(255,255,255,0.07);
-    border-radius: 99px;
-    overflow: hidden;
+  .score-big {
+    font-family: 'Space Mono', monospace; font-size: 32px; font-weight: 700;
+    line-height: 1;
   }
 
-  .score-fill {
-    height: 100%;
-    border-radius: 99px;
-    transition: width 1.2s cubic-bezier(.4,0,.2,1);
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-  }
+  .score-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
   .result-msg {
-    color: var(--muted);
-    font-size: 15px;
-    margin-bottom: 28px;
-    line-height: 1.6;
+    color: var(--muted); font-size: 15px; margin: 8px 0 28px; line-height: 1.65;
   }
 
   .btn-whatsapp {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 36px;
-    background: #25D366;
-    color: white;
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 12px;
-    text-decoration: none;
-    transition: all 0.25s;
-    box-shadow: 0 0 30px rgba(37,211,102,0.35);
-    cursor: pointer;
-    border: none;
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 16px 36px; background: #25D366; color: white;
+    font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700;
+    border-radius: 13px; text-decoration: none;
+    transition: all 0.25s; box-shadow: 0 0 36px rgba(37,211,102,0.3);
+    cursor: pointer; border: none;
   }
 
-  .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(37,211,102,0.5); }
+  .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 10px 48px rgba(37,211,102,0.5); }
 
-  .answer-review {
-    margin-top: 32px;
-    text-align: left;
-  }
+  /* ── ANSWER REVIEW ── */
+  .answer-review { margin-top: 36px; text-align: left; }
 
-  .review-title {
-    font-size: 14px;
-    font-family: 'Space Mono', monospace;
-    color: var(--muted);
-    margin-bottom: 12px;
-    letter-spacing: 0.08em;
+  .review-header {
+    font-family: 'Space Mono', monospace; font-size: 11px;
+    color: var(--muted); letter-spacing: 0.12em; margin-bottom: 14px;
   }
 
   .review-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    font-size: 13px;
-    line-height: 1.5;
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 16px; border-radius: 10px;
+    margin-bottom: 10px; font-size: 13.5px; line-height: 1.55;
   }
 
-  .review-item.correct { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); }
-  .review-item.wrong { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); }
-  .review-dot { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .review-item.correct { background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.18); }
+  .review-item.wrong   { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.18); }
 
-  /* Blocked screen */
-  .blocked-screen {
-    display: none;
-    text-align: center;
-    animation: fadeDown 0.6s ease both;
+  .review-dot { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+
+  .correct-ans-label { color: var(--success); font-size: 12.5px; margin-top: 5px; display: block; }
+  .your-ans-label    { color: var(--danger);  font-size: 12.5px; margin-top: 3px; display: block; }
+
+  /* ── BLOCKED SCREEN ── */
+  .blocked-screen { display: none; text-align: center; animation: fadeDown 0.6s ease both; }
+
+  .blocked-icon { font-size: 90px; margin-bottom: 14px; animation: bounceIn 0.6s ease both; }
+
+  .blocked-card {
+    background: var(--card); border: 1px solid rgba(239,68,68,0.25);
+    border-radius: var(--radius); padding: 32px 28px;
+    max-width: 440px; margin: 0 auto;
   }
 
-  .blocked-icon { font-size: 80px; margin-bottom: 16px; }
+  .blocked-title { font-size: 1.7rem; font-weight: 800; color: var(--danger); margin-bottom: 10px; }
+
+  .blocked-msg { color: var(--muted); font-size: 14.5px; line-height: 1.65; margin-bottom: 24px; }
 
   .countdown-box {
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.3);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin: 20px auto;
-    max-width: 320px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.22);
+    border-radius: 12px; padding: 20px; margin-bottom: 20px;
+  }
+
+  .countdown-label {
+    font-family: 'Space Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 0.14em; margin-bottom: 8px;
+  }
+
+  #countdown {
     font-family: 'Space Mono', monospace;
+    font-size: 36px; font-weight: 700; color: var(--danger); letter-spacing: 0.05em;
   }
 
-  .countdown-label { font-size: 12px; color: var(--muted); letter-spacing: 0.1em; }
-  #countdown { font-size: 28px; font-weight: 700; color: var(--danger); margin-top: 6px; }
+  #countdown.almost { color: var(--accent3); }
+  #countdown.done   { color: var(--success); }
 
-  /* Loading */
-  .loading { display: none; text-align: center; padding: 60px 0; }
-  .spinner {
-    width: 48px; height: 48px;
-    border: 3px solid rgba(0,229,200,0.15);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    margin: 0 auto 16px;
-    animation: spin 0.9s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* Utility */
-  .hidden { display: none !important; }
-  .card-container { position: relative; }
-
-  .anti-cheat-warning {
-    background: rgba(245,158,11,0.1);
-    border: 1px solid rgba(245,158,11,0.3);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 13px;
-    color: var(--accent3);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    animation: fadeDown 0.7s ease both;
-    animation-delay: 0.15s;
+  .prev-score-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; padding: 8px 14px;
+    font-size: 13px; color: var(--muted);
   }
 
+  .prev-score-tag strong { color: var(--text); }
+
+  .note-text { font-size: 12px; color: var(--muted); margin-top: 16px; line-height: 1.6; }
+
+  /* ── VOIDED SCREEN ── */
+  .voided-screen {
+    display: none; text-align: center; padding: 60px 20px;
+    animation: fadeDown 0.5s ease both;
+  }
+
+  /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
-    .wrapper { padding: 24px 12px 60px; }
-    h1 { font-size: 1.7rem; }
-    .q-card { padding: 20px; }
+    .wrapper { padding: 28px 12px 60px; }
+    h1 { font-size: 1.75rem; }
+    .q-card { padding: 20px 16px; }
+    .btn-submit { padding: 15px 36px; font-size: 15px; }
+    .info-bar { flex-direction: column; }
+    #countdown { font-size: 28px; }
   }
 </style>
 </head>
 <body>
-<div class="blob2"></div>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+
 <div class="wrapper">
 
-  <!-- Header -->
+  <!-- HEADER -->
   <div class="header">
-    <div class="badge"><span class="badge-dot"></span> LIVE TEST</div>
+    <div class="badge"><span class="badge-dot"></span>&nbsp;LIVE ENTRANCE TEST</div>
     <h1>BitByBit Coding Test</h1>
-    <p class="subtitle">Answer all 10 questions correctly to join the community</p>
+    <p class="subtitle">Pass the test to join our exclusive WhatsApp coding group</p>
   </div>
 
-  <!-- Blocked Screen -->
+  <!-- BLOCKED SCREEN -->
   <div class="blocked-screen" id="blockedScreen">
     <div class="blocked-icon">🔒</div>
-    <div class="result-title fail" style="font-size:1.6rem;">Access Blocked</div>
-    <p class="result-msg" style="margin-top:12px;">You have already attempted this test.<br>Come back after the cooldown period.</p>
-    <div class="countdown-box">
-      <div class="countdown-label">RETAKE AVAILABLE IN</div>
-      <div id="countdown">--:--:--</div>
+    <div class="blocked-card">
+      <div class="blocked-title">Access Locked</div>
+      <p class="blocked-msg">You have already attempted this test. A <strong>7-day cooldown</strong> is in effect before you can retake.<br>Come back when the timer reaches zero.</p>
+      <div class="countdown-box">
+        <div class="countdown-label">RETAKE UNLOCKS IN</div>
+        <div id="countdown">--:--:--:--</div>
+      </div>
+      <div id="prevScoreTag"></div>
+      <p class="note-text">⚠️ This lock is tied to your browser session.<br>Clearing cache does not bypass the restriction.</p>
     </div>
-    <p style="font-size:13px;color:var(--muted);">⚠️ Clearing browser storage will not reset the lock as your attempt is recorded.</p>
   </div>
 
-  <!-- Quiz Screen -->
+  <!-- VOIDED SCREEN -->
+  <div class="voided-screen" id="voidedScreen">
+    <div style="font-size:72px">🚫</div>
+    <p style="color:var(--danger);font-size:1.3rem;font-weight:800;margin-top:16px;">Attempt Voided</p>
+    <p style="color:var(--muted);margin-top:10px;font-size:14px;line-height:1.65;">You switched tabs <strong style="color:var(--text)">3 or more times</strong> during the test.<br>This attempt has been locked for 7 days.</p>
+  </div>
+
+  <!-- QUIZ SCREEN -->
   <div id="quizScreen">
-    <!-- Progress -->
+    <!-- Info pills -->
+    <div class="info-bar">
+      <div class="info-pill"><span class="icon">📋</span> <span><strong>10</strong> Questions</span></div>
+      <div class="info-pill"><span class="icon">✅</span> Pass: <strong>7 / 10</strong></div>
+      <div class="info-pill"><span class="icon">🔁</span> <strong>1 attempt</strong> / 7 days</div>
+      <div class="info-pill"><span class="icon">⏱</span> Time: <strong>20 mins</strong></div>
+    </div>
+
+    <!-- Progress + timer -->
     <div class="progress-wrap">
       <div class="progress-bar-bg">
         <div class="progress-bar-fill" id="progressFill"></div>
       </div>
       <div class="progress-label" id="progressLabel">0 / 10</div>
-      <div class="timer-wrap">
-        <span>⏱</span>
-        <span id="timer">20:00</span>
-      </div>
+      <div class="timer-wrap">⏱ <span id="timer">20:00</span></div>
     </div>
 
-    <div class="anti-cheat-warning">
-      ⚠️ <span>One attempt only. Tab switching is monitored. Results are final.</span>
-    </div>
+    <div class="warn-bar">⚠️ <span>One attempt per 7 days. Tab-switching is monitored. Results are final and permanent.</span></div>
 
-    <!-- Questions -->
-    <div id="questionsContainer" class="card-container"></div>
+    <!-- Questions injected here -->
+    <div id="questionsContainer"></div>
 
     <div class="submit-wrap">
       <button class="btn-submit" onclick="submitTest()">
-        <span>Submit Test</span>
-        <span>→</span>
+        Submit Test &nbsp;→
       </button>
     </div>
   </div>
 
-  <!-- Result Screen -->
+  <!-- RESULT SCREEN -->
   <div class="result-screen" id="resultScreen">
     <div class="result-icon" id="resultIcon"></div>
     <div class="result-title" id="resultTitle"></div>
-    <div class="score-display" id="scoreDisplay"></div>
-    <div class="score-bar">
-      <div class="score-fill" id="scoreFill"></div>
+    <div class="score-ring-wrap">
+      <svg viewBox="0 0 130 130" width="130" height="130">
+        <circle class="score-ring-bg" cx="65" cy="65" r="60"/>
+        <circle class="score-ring-fill" id="scoreRing" cx="65" cy="65" r="60"/>
+      </svg>
+      <div class="score-ring-label">
+        <span class="score-big" id="scoreBig"></span>
+        <span class="score-sub">out of 10</span>
+      </div>
     </div>
     <p class="result-msg" id="resultMsg"></p>
     <div id="resultAction"></div>
     <div class="answer-review" id="answerReview"></div>
   </div>
 
-</div>
+</div><!-- /wrapper -->
 
 <script>
-// ==================== QUESTIONS ====================
+// ═══════════════════════════════════════════
+//  QUESTIONS (from official docx)
+// ═══════════════════════════════════════════
 const questions = [
   {
-    q: "What is the time complexity of binary search on a sorted array of n elements?",
-    options: ["O(n)", "O(n²)", "O(log n)", "O(n log n)"],
-    ans: 2
+    q: "What is the most optimal time complexity to find the middle element of an array (given the array size n)?",
+    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    ans: 0  // A
   },
   {
-    q: "Which HTTP status code indicates a resource was successfully created?",
-    options: ["200 OK", "201 Created", "204 No Content", "301 Moved Permanently"],
-    ans: 1
+    q: "Which data structure typically provides dynamic size (can grow or shrink during runtime)?",
+    options: ["Static Array", "Linked List", "Fixed Matrix", "Stack implemented using array"],
+    ans: 1  // B
   },
   {
-    q: "In JavaScript, what does `typeof null` return?",
-    options: ['"null"', '"undefined"', '"object"', '"boolean"'],
-    ans: 2
+    q: "What is the best-case time complexity of Insertion Sort?",
+    options: ["O(n²)", "O(n log n)", "O(n)", "O(log n)"],
+    ans: 2  // C
   },
   {
-    q: "Which SQL clause is used to filter groups after a GROUP BY aggregation?",
-    options: ["WHERE", "FILTER", "HAVING", "SELECT"],
-    ans: 2
+    q: "Which algorithm is commonly used to find the shortest path in a weighted graph with non-negative weights?",
+    options: ["Breadth First Search (BFS)", "Depth First Search (DFS)", "Dijkstra's Algorithm", "KMP Algorithm"],
+    ans: 2  // C
   },
   {
-    q: "What design pattern does React's Context API primarily implement?",
-    options: ["Observer", "Singleton", "Dependency Injection", "Decorator"],
-    ans: 2
+    q: "What is the space complexity of Merge Sort?",
+    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    ans: 2  // C
   },
   {
-    q: "In Python, what is the output of: `print(0.1 + 0.2 == 0.3)`?",
-    options: ["True", "False", "None", "TypeError"],
-    ans: 1
+    q: "Consider the following recursive function:\nvoid func(int n) {\n  if(n == 1) return;\n  else return func(n-1) + func(n-2);\n}\nWhat is the space complexity of the recursive call stack?",
+    options: ["O(1)", "O(log n)", "O(n)", "O(2ⁿ)"],
+    ans: 2  // C
   },
   {
-    q: "What does the CSS property `box-sizing: border-box` do?",
-    options: [
-      "Adds a border around the box model",
-      "Includes padding and border within the element's declared width/height",
-      "Removes the default margin from elements",
-      "Makes the element's border a dashed line"
-    ],
-    ans: 1
+    q: "What is the worst-case time complexity of accessing the maximum element in a Binary Search Tree (BST)?",
+    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    ans: 2  // C (skewed BST)
   },
   {
-    q: "Which data structure uses LIFO (Last In, First Out) order?",
-    options: ["Queue", "Linked List", "Stack", "Heap"],
-    ans: 2
+    q: "What is the time complexity of accessing the top element of a heap?",
+    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    ans: 0  // A
   },
   {
-    q: "In Git, what does `git rebase` do compared to `git merge`?",
-    options: [
-      "Deletes the source branch after combining",
-      "Rewrites commit history by placing commits on top of another branch",
-      "Creates a new branch from the current state",
-      "Reverts the last commit on the current branch"
-    ],
-    ans: 1
+    q: "What is the minimum number of children a node can have in a binary tree?",
+    options: ["0", "1", "2", "3"],
+    ans: 0  // A (leaf node)
   },
   {
-    q: "What is a closure in JavaScript?",
-    options: [
-      "A function that has no return value",
-      "A way to close/terminate a running script",
-      "A function that retains access to its outer scope even after the outer function returns",
-      "A method to block access to a variable"
-    ],
-    ans: 2
+    q: "What is the time complexity of inserting an element at the end of an array (assuming sufficient capacity)?",
+    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    ans: 0  // A
   }
 ];
 
-// ==================== ANTI-CHEAT CONFIG ====================
-const COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24 hours
-const STORAGE_KEY = "bbb_attempt_v3";
-const TIMER_SECS = 20 * 60; // 20 minutes
+// ═══════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════
+const STORAGE_KEY   = "bbb_v5_attempt";
+const COOLDOWN_MS   = 7 * 24 * 60 * 60 * 1000; // 7 days
+const TIMER_SECS    = 20 * 60; // 20 minutes
+const PASS_SCORE    = 7;
+const WA_LINK       = "https://chat.whatsapp.com/BO4Nq6gAoKS5JT8XIYfDta?mode=gi_t";
 
-let timerInterval = null;
-let secondsLeft = TIMER_SECS;
-let tabSwitchCount = 0;
+let timerInterval  = null;
+let secondsLeft    = TIMER_SECS;
+let tabSwitches    = 0;
+let testSubmitted  = false;
 
-// ==================== INIT ====================
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
 window.onload = function () {
-  const attempt = getAttemptData();
-  if (attempt && attempt.timestamp) {
-    const elapsed = Date.now() - attempt.timestamp;
+  const attempt = getAttempt();
+  if (attempt && attempt.ts) {
+    const elapsed = Date.now() - attempt.ts;
     if (elapsed < COOLDOWN_MS) {
-      showBlockedScreen(attempt.timestamp);
+      showBlocked(attempt);
       return;
     }
   }
   buildQuiz();
   startTimer();
-  watchTabSwitch();
+  watchTabs();
+  disableDevTools();
 };
 
-function getAttemptData() {
+function getAttempt() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
 }
 
-function saveAttempt(score) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ timestamp: Date.now(), score }));
-  // Also set a cookie as secondary block
-  document.cookie = `${STORAGE_KEY}=1; max-age=${COOLDOWN_MS / 1000}; path=/`;
+function saveAttempt(score, voided = false) {
+  const data = { ts: Date.now(), score, voided };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  // Secondary cookie lock (7 days)
+  document.cookie = `${STORAGE_KEY}=1; max-age=${Math.floor(COOLDOWN_MS / 1000)}; path=/; SameSite=Strict`;
 }
 
-// ==================== BUILD QUIZ ====================
+// ═══════════════════════════════════════════
+//  BUILD QUIZ
+// ═══════════════════════════════════════════
 function buildQuiz() {
   const container = document.getElementById("questionsContainer");
   questions.forEach((item, i) => {
     const card = document.createElement("div");
     card.className = "q-card";
     card.id = `card_${i}`;
-    card.style.animationDelay = `${i * 0.06}s`;
+    card.style.animationDelay = `${i * 0.055}s`;
 
-    let optionsHTML = item.options.map((opt, oi) => `
+    // Render question text (support newlines as code block)
+    const hasCode = item.q.includes('\n');
+    const qDisplay = hasCode
+      ? item.q.split('\n').map((line, li) =>
+          li === 0 ? `<span>${escHtml(line)}</span>`
+                   : `<code>${escHtml(line)}</code>`
+        ).join('\n')
+      : escHtml(item.q);
+
+    const optLetters = ['A', 'B', 'C', 'D'];
+    const optionsHTML = item.options.map((opt, oi) => `
       <label class="option-label" onclick="markAnswered(${i})">
         <input type="radio" name="q${i}" value="${oi}">
         <span class="radio-custom"></span>
-        <span>${opt}</span>
+        <span><strong style="color:var(--accent);margin-right:6px;">${optLetters[oi]}.</strong>${escHtml(opt)}</span>
       </label>
     `).join('');
 
     card.innerHTML = `
-      <span class="q-num">QUESTION ${String(i + 1).padStart(2, '0')} / 10</span>
-      <p class="q-text">${item.q}</p>
+      <span class="q-num">QUESTION ${String(i + 1).padStart(2, '0')} OF 10</span>
+      <p class="q-text">${qDisplay}</p>
       <div class="options">${optionsHTML}</div>
     `;
     container.appendChild(card);
   });
 }
 
-function markAnswered(qIndex) {
-  const card = document.getElementById(`card_${qIndex}`);
-  card.classList.add("answered");
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function markAnswered(i) {
+  document.getElementById(`card_${i}`).classList.add("answered");
   updateProgress();
 }
 
 function updateProgress() {
   let answered = 0;
   questions.forEach((_, i) => {
-    const radios = document.querySelectorAll(`input[name="q${i}"]`);
-    if ([...radios].some(r => r.checked)) answered++;
+    if ([...document.querySelectorAll(`input[name="q${i}"]`)].some(r => r.checked)) answered++;
   });
   const pct = (answered / questions.length) * 100;
   document.getElementById("progressFill").style.width = pct + "%";
   document.getElementById("progressLabel").textContent = `${answered} / ${questions.length}`;
 }
 
-// ==================== TIMER ====================
+// ═══════════════════════════════════════════
+//  TIMER
+// ═══════════════════════════════════════════
 function startTimer() {
   timerInterval = setInterval(() => {
     secondsLeft--;
@@ -722,82 +663,112 @@ function startTimer() {
 }
 
 function autoSubmit() {
-  alert("⏰ Time's up! Auto-submitting your test.");
-  submitTest();
+  if (!testSubmitted) {
+    alert("⏰ Time's up! Auto-submitting your answers.");
+    submitTest(true);
+  }
 }
 
-// ==================== TAB SWITCH MONITOR ====================
-function watchTabSwitch() {
+// ═══════════════════════════════════════════
+//  TAB SWITCH GUARD
+// ═══════════════════════════════════════════
+function watchTabs() {
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      tabSwitchCount++;
-      if (tabSwitchCount >= 3) {
+    if (document.hidden && !testSubmitted) {
+      tabSwitches++;
+      if (tabSwitches >= 3) {
         clearInterval(timerInterval);
-        saveAttempt(-1);
-        alert("⚠️ You switched tabs too many times. Your attempt has been voided.");
-        document.getElementById("quizScreen").innerHTML =
-          `<div style="text-align:center;padding:60px 0;">
-            <div style="font-size:64px;">🚫</div>
-            <p style="color:var(--danger);font-size:1.2rem;font-weight:700;margin-top:16px;">Attempt Voided</p>
-            <p style="color:var(--muted);margin-top:8px;">Too many tab switches detected.</p>
-          </div>`;
+        saveAttempt(-1, true);
+        document.getElementById("quizScreen").style.display   = "none";
+        document.getElementById("blockedScreen").style.display = "none";
+        document.getElementById("voidedScreen").style.display  = "block";
+        testSubmitted = true;
       }
     }
   });
 }
 
-// ==================== SUBMIT ====================
-function submitTest() {
-  // Check all answered
-  let allAnswered = true;
-  questions.forEach((_, i) => {
-    const radios = document.querySelectorAll(`input[name="q${i}"]`);
-    if (![...radios].some(r => r.checked)) allAnswered = false;
+function disableDevTools() {
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.addEventListener("keydown", e => {
+    if (e.key === "F12" || (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key))
+        || (e.ctrlKey && e.key === "U")) {
+      e.preventDefault();
+    }
   });
-  if (!allAnswered) {
-    alert("⚠️ Please answer all 10 questions before submitting.");
-    return;
+}
+
+// ═══════════════════════════════════════════
+//  SUBMIT
+// ═══════════════════════════════════════════
+function submitTest(forced = false) {
+  if (testSubmitted) return;
+
+  if (!forced) {
+    let unanswered = 0;
+    questions.forEach((_, i) => {
+      if (![...document.querySelectorAll(`input[name="q${i}"]`)].some(r => r.checked)) unanswered++;
+    });
+    if (unanswered > 0) {
+      alert(`⚠️ Please answer all ${unanswered} remaining question(s) before submitting.`);
+      return;
+    }
   }
 
+  testSubmitted = true;
   clearInterval(timerInterval);
 
   let score = 0;
   const results = [];
   questions.forEach((q, i) => {
-    const radios = document.querySelectorAll(`input[name="q${i}"]`);
     let chosen = -1;
-    radios.forEach(r => { if (r.checked) chosen = parseInt(r.value); });
-    const correct = chosen === q.ans;
+    document.querySelectorAll(`input[name="q${i}"]`).forEach(r => {
+      if (r.checked) chosen = parseInt(r.value);
+    });
+    const correct = (chosen === q.ans);
     if (correct) score++;
-    results.push({ q: q.q, chosen, correct, correctAns: q.options[q.ans] });
+    results.push({
+      q: q.q,
+      chosen,
+      correct,
+      chosenText: chosen >= 0 ? q.options[chosen] : "Not answered",
+      correctText: q.options[q.ans]
+    });
   });
 
   saveAttempt(score);
   showResult(score, results);
 }
 
-// ==================== RESULT ====================
+// ═══════════════════════════════════════════
+//  RESULT
+// ═══════════════════════════════════════════
 function showResult(score, results) {
   document.getElementById("quizScreen").style.display = "none";
   const rs = document.getElementById("resultScreen");
   rs.style.display = "block";
 
-  const passed = score >= 7;
-  const pct = (score / questions.length) * 100;
+  const passed = score >= PASS_SCORE;
+  const pct    = score / questions.length;
 
-  document.getElementById("resultIcon").textContent = passed ? "🎉" : "😔";
-  document.getElementById("resultTitle").textContent = passed ? "You Passed!" : "Not Quite There";
-  document.getElementById("resultTitle").className = `result-title ${passed ? 'pass' : 'fail'}`;
-  document.getElementById("scoreDisplay").textContent = `${score} / 10`;
+  document.getElementById("resultIcon").textContent  = passed ? "🎉" : "😔";
+  document.getElementById("resultTitle").textContent = passed ? "You Passed!" : "Better Luck Next Time";
+  document.getElementById("resultTitle").className   = `result-title ${passed ? 'pass' : 'fail'}`;
+  document.getElementById("scoreBig").textContent    = `${score}`;
 
+  // Animate ring
+  const ring = document.getElementById("scoreRing");
+  ring.classList.add(passed ? 'pass-ring' : 'fail-ring');
+  const circumference = 2 * Math.PI * 60; // r=60
   setTimeout(() => {
-    document.getElementById("scoreFill").style.width = pct + "%";
+    ring.style.strokeDashoffset = circumference * (1 - pct);
   }, 300);
 
+  // Message
   if (passed) {
     document.getElementById("resultMsg").innerHTML =
-      `<strong style="color:var(--success)">Congratulations!</strong> You scored ${score}/10 and passed.<br>
-      Click below to join the BitByBit WhatsApp group.`;
+      `🚀 <strong style="color:var(--success)">Congratulations!</strong> You scored <strong>${score}/10</strong> and cleared the entrance test.<br>
+      Click below to join the BitByBit WhatsApp community.`;
     document.getElementById("resultAction").innerHTML = `
       <button class="btn-whatsapp" onclick="openWhatsApp()">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
