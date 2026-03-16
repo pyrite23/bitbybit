@@ -492,58 +492,58 @@
 
 <script>
 // ═══════════════════════════════════════════
-//  QUESTIONS (from official docx)
+//  QUESTIONS
 // ═══════════════════════════════════════════
 const questions = [
   {
     q: "What is the most optimal time complexity to find the middle element of an array (given the array size n)?",
     options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
-    ans: 0  // A
+    ans: 0
   },
   {
     q: "Which data structure typically provides dynamic size (can grow or shrink during runtime)?",
     options: ["Static Array", "Linked List", "Fixed Matrix", "Stack implemented using array"],
-    ans: 1  // B
+    ans: 1
   },
   {
     q: "What is the best-case time complexity of Insertion Sort?",
     options: ["O(n²)", "O(n log n)", "O(n)", "O(log n)"],
-    ans: 2  // C
+    ans: 2
   },
   {
     q: "Which algorithm is commonly used to find the shortest path in a weighted graph with non-negative weights?",
     options: ["Breadth First Search (BFS)", "Depth First Search (DFS)", "Dijkstra's Algorithm", "KMP Algorithm"],
-    ans: 2  // C
+    ans: 2
   },
   {
     q: "What is the space complexity of Merge Sort?",
     options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
-    ans: 2  // C
+    ans: 2
   },
   {
     q: "Consider the following recursive function:\nvoid func(int n) {\n  if(n == 1) return;\n  else return func(n-1) + func(n-2);\n}\nWhat is the space complexity of the recursive call stack?",
     options: ["O(1)", "O(log n)", "O(n)", "O(2ⁿ)"],
-    ans: 2  // C
+    ans: 2
   },
   {
     q: "What is the worst-case time complexity of accessing the maximum element in a Binary Search Tree (BST)?",
     options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
-    ans: 2  // C (skewed BST)
+    ans: 2
   },
   {
     q: "What is the time complexity of accessing the top element of a heap?",
     options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
-    ans: 0  // A
+    ans: 0
   },
   {
     q: "What is the minimum number of children a node can have in a binary tree?",
     options: ["0", "1", "2", "3"],
-    ans: 0  // A (leaf node)
+    ans: 0
   },
   {
     q: "What is the time complexity of inserting an element at the end of an array (assuming sufficient capacity)?",
     options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
-    ans: 0  // A
+    ans: 0
   }
 ];
 
@@ -601,7 +601,6 @@ function buildQuiz() {
     card.id = `card_${i}`;
     card.style.animationDelay = `${i * 0.055}s`;
 
-    // Render question text (support newlines as code block)
     const hasCode = item.q.includes('\n');
     const qDisplay = hasCode
       ? item.q.split('\n').map((line, li) =>
@@ -732,7 +731,7 @@ function submitTest(forced = false) {
       chosen,
       correct,
       chosenText: chosen >= 0 ? q.options[chosen] : "Not answered",
-      correctText: q.options[q.ans]
+      correctText: q.options[q.ans]  // ✅ FIX: was stored correctly, now also used correctly below
     });
   });
 
@@ -759,7 +758,7 @@ function showResult(score, results) {
   // Animate ring
   const ring = document.getElementById("scoreRing");
   ring.classList.add(passed ? 'pass-ring' : 'fail-ring');
-  const circumference = 2 * Math.PI * 60; // r=60
+  const circumference = 2 * Math.PI * 60;
   setTimeout(() => {
     ring.style.strokeDashoffset = circumference * (1 - pct);
   }, 300);
@@ -775,22 +774,31 @@ function showResult(score, results) {
         Join WhatsApp Group
       </button>`;
   } else {
+    // ✅ FIX: was incorrectly saying "24 hours" — now correctly says "7 days"
     document.getElementById("resultMsg").innerHTML =
       `You scored <strong>${score}/10</strong>. You need at least <strong>7/10</strong> to pass.<br>
-      Study harder and try again after 24 hours.`;
+      Study harder and try again after <strong>7 days</strong>.`;
     document.getElementById("resultAction").innerHTML = `
-      <p style="color:var(--muted);font-size:13px;margin-top:8px;">🔒 Retake available in 24 hours</p>`;
+      <p style="color:var(--muted);font-size:13px;margin-top:8px;">🔒 Retake available in 7 days</p>`;
   }
 
   // Answer review
-  let reviewHTML = `<p class="review-title">// ANSWER REVIEW</p>`;
+  const optLetters = ['A', 'B', 'C', 'D'];
+  let reviewHTML = `<p class="review-header">// ANSWER REVIEW</p>`;
   results.forEach((r, i) => {
+    const correctLetter = optLetters[questions[i].ans];
+    const chosenLetter  = r.chosen >= 0 ? optLetters[r.chosen] : '—';
     reviewHTML += `
       <div class="review-item ${r.correct ? 'correct' : 'wrong'}">
         <span class="review-dot">${r.correct ? '✅' : '❌'}</span>
         <div>
-          <strong>Q${i+1}:</strong> ${r.q}<br>
-          ${!r.correct ? `<span style="color:var(--muted);font-size:12px;">Correct: ${r.correctAns}</span>` : ''}
+          <strong>Q${i + 1}:</strong> ${escHtml(questions[i].q.split('\n')[0])}
+          ${!r.correct
+            // ✅ FIX: was using r.correctAns (undefined) — now uses r.correctText
+            ? `<span class="correct-ans-label">✔ Correct answer: ${correctLetter}. ${escHtml(r.correctText)}</span>
+               <span class="your-ans-label">✘ Your answer: ${chosenLetter}${r.chosen >= 0 ? '. ' + escHtml(r.chosenText) : ' (not answered)'}</span>`
+            : `<span class="correct-ans-label">✔ ${correctLetter}. ${escHtml(r.correctText)}</span>`
+          }
         </div>
       </div>`;
   });
@@ -799,54 +807,59 @@ function showResult(score, results) {
 
 // ==================== WHATSAPP DEEP LINK ====================
 function openWhatsApp() {
-  const groupLink = "https://chat.whatsapp.com/BO4Nq6gAoKS5JT8XIYfDta?mode=gi_t";
+  const groupLink = WA_LINK;
   const ua = navigator.userAgent || navigator.vendor || window.opera;
   const isAndroid = /android/i.test(ua);
   const isIOS = /iphone|ipad|ipod/i.test(ua);
 
   if (isAndroid || isIOS) {
-    // Try to open native WhatsApp app
     const code = groupLink.replace("https://chat.whatsapp.com/", "");
     const appLink = `whatsapp://g/${code}`;
-    const fallback = groupLink;
-    const start = Date.now();
     const iframe = document.createElement("iframe");
     iframe.style.display = "none";
     iframe.src = appLink;
     document.body.appendChild(iframe);
-    setTimeout(() => {
-      document.body.removeChild(iframe);
-      if (Date.now() - start < 2000) {
-        window.open(fallback, "_blank");
-      }
-    }, 1500);
+    setTimeout(() => { document.body.removeChild(iframe); }, 1500);
     window.location.href = appLink;
-    setTimeout(() => { window.open(fallback, "_blank"); }, 2000);
+    setTimeout(() => { window.open(groupLink, "_blank"); }, 2000);
   } else {
     window.open(groupLink, "_blank");
   }
 }
 
 // ==================== BLOCKED SCREEN ====================
-function showBlockedScreen(timestamp) {
-  document.getElementById("quizScreen").style.display = "none";
+function showBlocked(attempt) {
+  document.getElementById("quizScreen").style.display   = "none";
   document.getElementById("blockedScreen").style.display = "block";
-  runCountdown(timestamp);
+
+  if (attempt.score !== undefined && attempt.score >= 0) {
+    document.getElementById("prevScoreTag").innerHTML = `
+      <div class="prev-score-tag">
+        🎯 Previous score: <strong>${attempt.score} / 10</strong>
+        &nbsp;·&nbsp; ${attempt.score >= PASS_SCORE ? '<span style="color:var(--success)">Passed</span>' : '<span style="color:var(--danger)">Failed</span>'}
+      </div>`;
+  }
+
+  runCountdown(attempt.ts);
 }
 
 function runCountdown(timestamp) {
   function tick() {
     const remaining = COOLDOWN_MS - (Date.now() - timestamp);
+    const el = document.getElementById("countdown");
     if (remaining <= 0) {
-      document.getElementById("countdown").textContent = "00:00:00";
-      document.getElementById("blockedScreen").innerHTML +=
-        `<p style="color:var(--success);margin-top:16px;font-weight:700;">✅ Cooldown over! Refresh to retake.</p>`;
+      el.textContent = "00:00:00";
+      el.className = "done";
+      document.getElementById("blockedScreen").insertAdjacentHTML('beforeend',
+        `<p style="color:var(--success);margin-top:16px;font-weight:700;">✅ Cooldown over! Refresh to retake.</p>`);
       return;
     }
-    const h = String(Math.floor(remaining / 3600000)).padStart(2, '0');
+    const d = Math.floor(remaining / 86400000);
+    const h = String(Math.floor((remaining % 86400000) / 3600000)).padStart(2, '0');
     const m = String(Math.floor((remaining % 3600000) / 60000)).padStart(2, '0');
     const s = String(Math.floor((remaining % 60000) / 1000)).padStart(2, '0');
-    document.getElementById("countdown").textContent = `${h}:${m}:${s}`;
+    el.textContent = d > 0 ? `${d}d ${h}:${m}:${s}` : `${h}:${m}:${s}`;
+    if (remaining < 3600000) el.className = "almost";
     setTimeout(tick, 1000);
   }
   tick();
