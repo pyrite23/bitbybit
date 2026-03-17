@@ -496,60 +496,56 @@
 // ═══════════════════════════════════════════
 const questions = [
   {
-    q: "What is used to store multiple values in a single variable in JavaScript?",
-    options: ["String", "Number", "Array", "Boolean"],
-    ans: 2
-  },
-  {
-    q: "Which symbol is used for single-line comments in JavaScript?",
-    options: ["//", "/* */", "#", "<!-- -->"],
+    q: "What is the time complexity of accessing an element by index in an array?",
+    options: ["O(1)", "O(n)", "O(log n)", "O(n²)"],
     ans: 0
   },
   {
-    q: "How do you create a variable in JavaScript?",
-    options: ["let x;", "var x;", "const x;", "All of the above"],
+    q: "Which data structure follows the Last In First Out (LIFO) principle?",
+    options: ["Queue", "Stack", "Linked List", "Tree"],
+    ans: 1
+  },
+  {
+    q: "What is the time complexity of inserting an element at the beginning of a singly linked list (assuming you have head pointer)?",
+    options: ["O(1)", "O(n)", "O(log n)", "O(n²)"],
+    ans: 0
+  },
+  {
+    q: "Which traversal visits the root node first, then left subtree, then right subtree?",
+    options: ["Inorder", "Preorder", "Postorder", "Level order"],
+    ans: 1
+  },
+  {
+    q: "What is the average time complexity of searching for an element in a Binary Search Tree (balanced)?",
+    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    ans: 1
+  },
+  {
+    q: "Which sorting algorithm has the best average and worst-case time complexity of O(n log n)?",
+    options: ["Bubble Sort", "Insertion Sort", "Merge Sort", "Selection Sort"],
+    ans: 2
+  },
+  {
+    q: "In a queue, which operation removes an element from the front?",
+    options: ["push", "pop", "enqueue", "dequeue"],
     ans: 3
   },
   {
-    q: "What will this code output?\nconsole.log(5 + '5');",
-    options: ["10", "55", "Error", "NaN"],
-    ans: 1
-  },
-  {
-    q: "Which method is used to add an element at the end of an array?",
-    options: ["push()", "pop()", "shift()", "unshift()"],
+    q: "What is the space complexity of a recursive inorder traversal of a binary tree (ignoring the recursion stack)?",
+    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
     ans: 0
   },
   {
-    q: "What does '===' check in JavaScript?",
-    options: ["Only value", "Value and type", "Only type", "Reference only"],
-    ans: 1
-  },
-  {
-    q: "How do you write an if statement in JavaScript?",
-    options: ["if x > 10", "if (x > 10)", "if x > 10 then", "when x > 10"],
-    ans: 1
-  },
-  {
-    q: "Which keyword is used to define a constant variable?",
-    options: ["let", "var", "const", "static"],
+    q: "Which data structure is typically used to implement LRU Cache?",
+    options: ["Stack + Array", "Queue + HashMap", "HashMap + Doubly Linked List", "Binary Tree"],
     ans: 2
   },
   {
-    q: "What is the correct way to write a function in JavaScript?",
-    options: ["function myFunc() {}", "def myFunc():", "func myFunc()", "MyFunc = function() {}"],
+    q: "What is the time complexity of finding the minimum element in a min-heap?",
+    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
     ans: 0
-  },
-  {
-    q: "What does this code do?\nlet arr = [1,2,3]; arr.length = 0;",
-    options: ["Deletes array", "Makes array empty", "Sets length to 0 but keeps values", "Error"],
-    ans: 1
   }
 ];
-
-// ═══════════════════════════════════════════
-//  CONFIG
-// ═══════════════════════════════════════════
 const STORAGE_KEY   = "bbb_v5_attempt";
 const COOLDOWN_MS   = 7 * 24 * 60 * 60 * 1000; // 7 days
 const TIMER_SECS    = 20 * 60; // 20 minutes
